@@ -1,6 +1,8 @@
 from nanoleaf import setup, Aurora
 from tkinter import *
 
+
+
 ips = None
 while not ips:
     # Continuously search for an Aurora until it finds one. There have been issues with the Aurora not appearing even
@@ -12,6 +14,7 @@ token = 'Rljgmwi2CuWQwfAU98X0EFRnofS3GAjf'
 
 # Authorize the Aurora using the IP address and token
 aurora = Aurora(ips[0], token)
+
 
 def get_effects():
     """
@@ -27,12 +30,65 @@ def get_effects():
     for effect in all_effects['animations']:
         try:
             # 'pluginType' is only present for Rhythm effects, so this will be the attribute the list is split around
+            # If 'pluginType' is not present this statement will fail and it will go to the except
             if effect['pluginType']:
                 rhythm_effects.append(effect['animName'])
         except:
             effects.append(effect['animName'])
 
     return [effects, rhythm_effects]
+
+
+
+def create_effect():
+    def create_animation_buttons(self):
+        animations = ["random", "flow", "wheel", "explode", "highlight", "fade"]
+        anim = StringVar()
+        anim.set("random")
+        for anim_type in animations:
+            Radiobutton(text=anim_type, variable=anim, value=anim_type, tristatevalue="x"). \
+                pack(anchor=W)
+        effect_data["animType"] = anim.get()
+
+    def next_button(value):
+        print(value)
+
+    def create_name(self):
+        Label(text="Name", font=("Helvetica", 15))
+        user_input = StringVar()
+        name = Entry()
+        name.pack()
+        name.focus_set()
+
+        button = Button(text="Next", command=next_button(name.get())).pack()
+
+    class Application(Frame):
+
+        def create_widgets(self):
+            Label(text="Effect Creation", font=("Helvetica", 15)).pack()
+            create_name(self)
+            create_animation_buttons(self)
+
+        def __init__(self, master=None):
+            Frame.__init__(self, master)
+            self.pack()
+            self.create_widgets()
+
+    effect_data = {"command": "add", "animName": None, "animType": None, "colorType": "HSB", "palette": None,
+                   "brightnessRange": None, "transTime": None, "delayTime": None, "loop": True}
+
+    def on_closing():
+        # Close the GUI
+        root.destroy()
+        print(effect_data["animName"]+"  "+effect_data["animType"])
+
+    print(effect_data["animType"])
+    root = Tk()
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+    app = Application(master=root)
+    root.title("Nanoleaf")
+    root.geometry('+%d+%d' % (100, 100))
+    app.mainloop()
 
 
 def control_window(effect_lists):
@@ -83,6 +139,7 @@ def control_window(effect_lists):
 
 def main():
     # Get the effects from the Aurora and then send them to the GUI.
+    create_effect()
     effect_options = get_effects()
     control_window(effect_options)
 
