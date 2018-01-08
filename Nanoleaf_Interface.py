@@ -2,14 +2,13 @@ from nanoleaf import setup, Aurora
 from tkinter import *
 
 ips = None
-
 while not ips:
     # Continuously search for an Aurora until it finds one. There have been issues with the Aurora not appearing even
     # after searching for a while. Retrying the statement fixes those issues.
     ips = setup.find_auroras(1)
 
 # Authorization token to access the Aurora. Specific to the device.
-token = 'z9HOW4b7ewPUvX2QKBjwVIRcOeaS1jA1'
+token = 'Rljgmwi2CuWQwfAU98X0EFRnofS3GAjf'
 
 # Authorize the Aurora using the IP address and token
 aurora = Aurora(ips[0], token)
